@@ -17,7 +17,7 @@ class GildedRoseTest {
         // Given
         final var itemName = GildedRoseTest.DEXTERITY_VEST_NAME;
         final var item = new Item(itemName, 10, 20);
-        final var items = new Item[]{ item };
+        final var items = new Item[]{item};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 19;
@@ -38,7 +38,7 @@ class GildedRoseTest {
         // Given
         final var itemName = GildedRoseTest.DEXTERITY_VEST_NAME;
         final var item = new Item(itemName, 0, 20);
-        final var items = new Item[]{ item };
+        final var items = new Item[]{item};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 18;
@@ -63,7 +63,7 @@ class GildedRoseTest {
         final var elixirItem = new Item(elixirName, 0, 0);
 
 
-        final var items = new Item[]{ dexterityItem, elixirItem };
+        final var items = new Item[]{dexterityItem, elixirItem};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 0;
@@ -86,7 +86,7 @@ class GildedRoseTest {
         final var itemName = AGED_BRIE;
         final var unexpiredAgedBrie = new Item(itemName, 5, 10);
         final var expiredAgedBrie = new Item(itemName, 0, 10);
-        final var items = new Item[]{ unexpiredAgedBrie, expiredAgedBrie };
+        final var items = new Item[]{unexpiredAgedBrie, expiredAgedBrie};
         final var app = new GildedRose(items);
 
         final var expectedUnexpiredBrieQuality = 11;
@@ -110,7 +110,7 @@ class GildedRoseTest {
         final var itemName = AGED_BRIE;
         final var unexpiredAgedBrie = new Item(itemName, 5, 50);
         final var expiredAgedBrie = new Item(itemName, 0, 50);
-        final var items = new Item[]{ unexpiredAgedBrie, expiredAgedBrie };
+        final var items = new Item[]{unexpiredAgedBrie, expiredAgedBrie};
         final var app = new GildedRose(items);
 
         final var expectedUnexpiredBrieQuality = 50;
@@ -137,7 +137,7 @@ class GildedRoseTest {
         final var justExpiredRaganaros = new Item(sulfarasRagnarosName, 0, 80);
         final var pastSellinRegagnaros = new Item(sulfarasRagnarosName, -1, 80);
 
-        final var items = new Item[]{ unexpiredSulfaras, justExpiredRaganaros, pastSellinRegagnaros };
+        final var items = new Item[]{unexpiredSulfaras, justExpiredRaganaros, pastSellinRegagnaros};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 80;
@@ -168,7 +168,7 @@ class GildedRoseTest {
         final var backstage11Days = new Item(backStageName, 11, 20);
         final var backStage20Days = new Item(backStageName, 20, 20);
 
-        final var items = new Item[]{ backstage11Days, backStage20Days };
+        final var items = new Item[]{backstage11Days, backStage20Days};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 21;
@@ -197,7 +197,7 @@ class GildedRoseTest {
         final var backstage10Days = new Item(backStageName, 10, 41);
         final var backStage6Days = new Item(backStageName, 6, 41);
 
-        final var items = new Item[]{ backstage10Days, backStage6Days };
+        final var items = new Item[]{backstage10Days, backStage6Days};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 43;
@@ -226,7 +226,7 @@ class GildedRoseTest {
         final var backstage5Days = new Item(backStageName, 5, 15);
         final var backStage3Days = new Item(backStageName, 3, 15);
 
-        final var items = new Item[]{ backstage5Days, backStage3Days };
+        final var items = new Item[]{backstage5Days, backStage3Days};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 18;
@@ -255,7 +255,7 @@ class GildedRoseTest {
         final var backstage0Days = new Item(backStageName, 0, 15);
         final var backStageExpiredFo1Day = new Item(backStageName, -1, 15);
 
-        final var items = new Item[]{ backstage0Days, backStageExpiredFo1Day };
+        final var items = new Item[]{backstage0Days, backStageExpiredFo1Day};
         final var app = new GildedRose(items);
 
         final var expectedQuality = 0;
@@ -273,5 +273,34 @@ class GildedRoseTest {
         assertEquals(backStageName, app.items[1].name);
         assertEquals(expectedSellInBackStage3Days, app.items[1].sellIn);
         assertEquals(expectedQuality, app.items[1].quality);
+    }
+
+    @Test
+    @DisplayName("A backstage should quality can't exceed 50")
+    void backstageQualityCantExceedFifty() {
+        // Given
+        final var backStageName = "Backstage passes to a TAFKAL80ETC concert";
+
+        final var backstageInMoreThan10Days = new Item(backStageName, 12, 50);
+        final var backstageInLessThan10Days = new Item(backStageName, 9, 49);
+        final var backstageInLessThan5Days = new Item(backStageName, 3, 48);
+
+        final var items = new Item[]{backstageInMoreThan10Days, backstageInLessThan10Days, backstageInLessThan5Days};
+        final var app = new GildedRose(items);
+
+        final var expectedQuality = 50;
+
+        // When
+        app.updateQuality();
+
+        // Then
+        assertEquals(backStageName, app.items[0].name);
+        assertEquals(expectedQuality, app.items[0].quality);
+
+        assertEquals(backStageName, app.items[1].name);
+        assertEquals(expectedQuality, app.items[1].quality);
+
+        assertEquals(backStageName, app.items[2].name);
+        assertEquals(expectedQuality, app.items[2].quality);
     }
 }
