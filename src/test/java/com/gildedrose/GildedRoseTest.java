@@ -101,4 +101,28 @@ class GildedRoseTest {
         assertEquals(itemName, app.items[1].name);
         assertEquals(expectedExpiredBrieQuality, app.items[1].quality);
     }
+
+    @Test
+    @DisplayName("When the Brie has a quality of 50 It should not increase in Quality")
+    void agedBrieWithQualityOf50() {
+        // Given
+        final var itemName = "Aged Brie";
+        final var unexpiredAgedBrie = new Item(itemName, 5, 50);
+        final var expiredAgedBrie = new Item(itemName, 0, 50);
+        final var items = new Item[]{ unexpiredAgedBrie, expiredAgedBrie };
+        final var app = new GildedRose(items);
+
+        final var expectedUnexpiredBrieQuality = 50;
+        final var expectedExpiredBrieQuality = 50;
+
+        // When
+        app.updateQuality();
+
+        // Then
+        assertEquals(itemName, app.items[0].name);
+        assertEquals(expectedUnexpiredBrieQuality, app.items[0].quality);
+
+        assertEquals(itemName, app.items[1].name);
+        assertEquals(expectedExpiredBrieQuality, app.items[1].quality);
+    }
 }
