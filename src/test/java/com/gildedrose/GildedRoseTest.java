@@ -134,10 +134,10 @@ class GildedRoseTest {
         final var sulfarasRagnarosName = "Sulfuras, Hand of Ragnaros";
 
         final var unexpiredSulfaras = new Item(sulfarasRagnarosName, 56, 80);
-        final var justExpiredRaganaras = new Item(sulfarasRagnarosName, 0, 80);
-        final var pastSellinRegagnaras = new Item(sulfarasRagnarosName, -1, 80);
+        final var justExpiredRaganaros = new Item(sulfarasRagnarosName, 0, 80);
+        final var pastSellinRegagnaros = new Item(sulfarasRagnarosName, -1, 80);
 
-        final var items = new Item[]{ unexpiredSulfaras, justExpiredRaganaras, pastSellinRegagnaras };
+        final var items = new Item[]{ unexpiredSulfaras, justExpiredRaganaros, pastSellinRegagnaros };
         final var app = new GildedRose(items);
 
         final var expectedQuality = 80;
@@ -151,16 +151,16 @@ class GildedRoseTest {
         assertEquals(expectedQuality, app.items[0].quality);
 
         assertEquals(sulfarasRagnarosName, app.items[1].name);
-        assertEquals(justExpiredRaganaras.sellIn, app.items[1].sellIn);
+        assertEquals(justExpiredRaganaros.sellIn, app.items[1].sellIn);
         assertEquals(expectedQuality, app.items[1].quality);
 
         assertEquals(sulfarasRagnarosName, app.items[2].name);
-        assertEquals(pastSellinRegagnaras.sellIn, app.items[2].sellIn);
+        assertEquals(pastSellinRegagnaros.sellIn, app.items[2].sellIn);
         assertEquals(expectedQuality, app.items[2].quality);
     }
 
     @Test
-    @DisplayName("When a backstage pass is older than 10 days It should increase in Quality by 1")
+    @DisplayName("When a backstage pass expires in more than 10 days It should increase in Quality by 1")
     void backstageExpiresInMoreThan10Days() {
         // Given
         final var backStageName = "Backstage passes to a TAFKAL80ETC concert";
@@ -173,7 +173,7 @@ class GildedRoseTest {
 
         final var expectedQuality = 21;
         final var expectedSellInBackstage11Days = 10;
-        final var expectedSellInBackStage20DaysDays = 19;
+        final var expectedSellInBackStage20Days = 19;
 
         // When
         app.updateQuality();
@@ -184,7 +184,36 @@ class GildedRoseTest {
         assertEquals(expectedQuality, app.items[0].quality);
 
         assertEquals(backStageName, app.items[1].name);
-        assertEquals(expectedSellInBackStage20DaysDays, app.items[1].sellIn);
+        assertEquals(expectedSellInBackStage20Days, app.items[1].sellIn);
+        assertEquals(expectedQuality, app.items[1].quality);
+    }
+
+    @Test
+    @DisplayName("When a backstage pass expires in less than 10 days It should increase in Quality by 2")
+    void backstageExpiresInMoreTBetween10And5Days() {
+        // Given
+        final var backStageName = "Backstage passes to a TAFKAL80ETC concert";
+
+        final var backstage10Days = new Item(backStageName, 10, 41);
+        final var backStage6Days = new Item(backStageName, 6, 41);
+
+        final var items = new Item[]{ backstage10Days, backStage6Days };
+        final var app = new GildedRose(items);
+
+        final var expectedQuality = 43;
+        final var expectedSellInBackstage10Days = 9;
+        final var expectedSellInBackStage6Days = 5;
+
+        // When
+        app.updateQuality();
+
+        // Then
+        assertEquals(backStageName, app.items[0].name);
+        assertEquals(expectedSellInBackstage10Days, app.items[0].sellIn);
+        assertEquals(expectedQuality, app.items[0].quality);
+
+        assertEquals(backStageName, app.items[1].name);
+        assertEquals(expectedSellInBackStage6Days, app.items[1].sellIn);
         assertEquals(expectedQuality, app.items[1].quality);
     }
 }
