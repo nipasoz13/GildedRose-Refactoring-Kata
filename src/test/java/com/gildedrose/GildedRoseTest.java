@@ -190,7 +190,7 @@ class GildedRoseTest {
 
     @Test
     @DisplayName("When a backstage pass expires in less than 10 days It should increase in Quality by 2")
-    void backstageExpiresInMoreTBetween10And5Days() {
+    void backstageExpiresBetween10And5Days() {
         // Given
         final var backStageName = "Backstage passes to a TAFKAL80ETC concert";
 
@@ -214,6 +214,64 @@ class GildedRoseTest {
 
         assertEquals(backStageName, app.items[1].name);
         assertEquals(expectedSellInBackStage6Days, app.items[1].sellIn);
+        assertEquals(expectedQuality, app.items[1].quality);
+    }
+
+    @Test
+    @DisplayName("When a backstage pass expires in less than 10 days It should increase in Quality by 2")
+    void backstageExpiresInLess5Days() {
+        // Given
+        final var backStageName = "Backstage passes to a TAFKAL80ETC concert";
+
+        final var backstage5Days = new Item(backStageName, 5, 15);
+        final var backStage3Days = new Item(backStageName, 3, 15);
+
+        final var items = new Item[]{ backstage5Days, backStage3Days };
+        final var app = new GildedRose(items);
+
+        final var expectedQuality = 18;
+        final var expectedSellInBackstage5Days = 4;
+        final var expectedSellInBackStage3Days = 2;
+
+        // When
+        app.updateQuality();
+
+        // Then
+        assertEquals(backStageName, app.items[0].name);
+        assertEquals(expectedSellInBackstage5Days, app.items[0].sellIn);
+        assertEquals(expectedQuality, app.items[0].quality);
+
+        assertEquals(backStageName, app.items[1].name);
+        assertEquals(expectedSellInBackStage3Days, app.items[1].sellIn);
+        assertEquals(expectedQuality, app.items[1].quality);
+    }
+
+    @Test
+    @DisplayName("When a backstage has a selling of 0 or less days It should have a quality of zero")
+    void expiredBackstages() {
+        // Given
+        final var backStageName = "Backstage passes to a TAFKAL80ETC concert";
+
+        final var backstage0Days = new Item(backStageName, 0, 15);
+        final var backStageExpiredFo1Day = new Item(backStageName, -1, 15);
+
+        final var items = new Item[]{ backstage0Days, backStageExpiredFo1Day };
+        final var app = new GildedRose(items);
+
+        final var expectedQuality = 0;
+        final var expectedSellInBackstage5Days = -1;
+        final var expectedSellInBackStage3Days = -2;
+
+        // When
+        app.updateQuality();
+
+        // Then
+        assertEquals(backStageName, app.items[0].name);
+        assertEquals(expectedSellInBackstage5Days, app.items[0].sellIn);
+        assertEquals(expectedQuality, app.items[0].quality);
+
+        assertEquals(backStageName, app.items[1].name);
+        assertEquals(expectedSellInBackStage3Days, app.items[1].sellIn);
         assertEquals(expectedQuality, app.items[1].quality);
     }
 }
