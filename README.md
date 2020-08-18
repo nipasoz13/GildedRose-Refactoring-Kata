@@ -1,6 +1,6 @@
 # Gilded Rose Refactoring Kata
 
-This Kata was forked from Emily Bache GitHub [repoistory](https://github.com/emilybache/GildedRose-Refactoring-Kata)
+This Kata was forked from Emily Bache GitHub [repository](https://github.com/emilybache/GildedRose-Refactoring-Kata)
 
 ## How to use this Kata
 
