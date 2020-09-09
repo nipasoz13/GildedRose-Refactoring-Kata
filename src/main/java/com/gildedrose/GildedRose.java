@@ -54,21 +54,29 @@ class GildedRose {
     }
 
     private int computeOrdinaryItemQuality(Item item) {
-        var depreciation = item.sellIn > 0 ? 1 : 2;
+        int depreciation = getOrdinaryItemDepreciation(item);
         return item.quality - depreciation <= QUALITY_MIN ? QUALITY_MIN : item.quality - depreciation;
     }
 
+    private int getOrdinaryItemDepreciation(Item item) {
+        return item.sellIn > 0 ? 1 : 2;
+    }
+
     private int computeBrieQuality(Item item) {
-        var appreciation = item.sellIn > 0 ? 1 : 2;
+        int appreciation = getOrdinaryItemDepreciation(item);
         return appreciate(item.quality, appreciation);
     }
 
     private int computeConjuredItemQuality(Item item) {
-        var depreciation = item.sellIn > 0 ? 2 : 4;
-        return item.quality - depreciation <= QUALITY_MIN ? QUALITY_MIN : item.quality - depreciation;
+        var depreciation = getOrdinaryItemDepreciation(item) * 2;
+        return depreciate(item, depreciation);
     }
 
     private int appreciate(int quality, int appreciationFactor) {
         return quality + appreciationFactor >= QUALITY_MAX ? QUALITY_MAX : quality + appreciationFactor;
+    }
+
+    private int depreciate(Item item, int depreciation) {
+        return item.quality - depreciation <= QUALITY_MIN ? QUALITY_MIN : item.quality - depreciation;
     }
 }
