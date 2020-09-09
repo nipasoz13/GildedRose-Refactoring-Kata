@@ -5,10 +5,11 @@ import java.util.Arrays;
 import static com.gildedrose.ItemCategory.getCategory;
 
 class GildedRose {
-    public static final String AGED_BRIE = "Aged Brie";
-    public static final String BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert";
+    private static final String AGED_BRIE = "Aged Brie";
+    private static final String BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert";
     private static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
     private static final int QUALITY_MAX = 50;
+    private static final int QUALITY_MIN = 0;
 
     Item[] items;
 
@@ -74,12 +75,22 @@ class GildedRose {
 
     private void newProcessItem(Item item) {
         switch (getCategory(item)) {
-            case AGED_BRIE: processBrie(item);
+            case AGED_BRIE:
+                processBrie(item);
+                break;
+            case BACKSTAGE:
+            case SULFURAS_HAND_OF_RAGNAROS:
+                processItem(item);
                 break;
             default:
-                processItem(item);
+                processOrdinaryItem(item);
         }
+    }
 
+    private void processOrdinaryItem(Item item) {
+        var decreaseFactor = item.sellIn > 0 ? 1 : 2;
+        item.quality = item.quality > QUALITY_MIN ? item.quality - decreaseFactor : item.quality;
+        item.sellIn--;
     }
 
     private void processBrie(Item item) {
