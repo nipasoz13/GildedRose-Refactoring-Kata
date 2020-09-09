@@ -2,7 +2,7 @@ package com.gildedrose;
 
 import java.util.Arrays;
 
-import static com.gildedrose.ItemCategory.SULFURAS_HAND_OF_RAGNAROS;
+import static com.gildedrose.ItemCategory.LEGENDARY;
 import static com.gildedrose.ItemCategory.getCategory;
 
 class GildedRose {
@@ -22,14 +22,14 @@ class GildedRose {
 
     private void processItem(Item item) {
         item.quality = computeItemQuality(item);
-        if (getCategory(item) != SULFURAS_HAND_OF_RAGNAROS) {
+        if (getCategory(item) != LEGENDARY) {
             item.sellIn--;
         }
     }
 
     private int computeItemQuality(Item item) {
         switch (getCategory(item)) {
-            case SULFURAS_HAND_OF_RAGNAROS:
+            case LEGENDARY:
                 return item.quality;
             case AGED_BRIE:
                 return computeBrieQuality(item);
