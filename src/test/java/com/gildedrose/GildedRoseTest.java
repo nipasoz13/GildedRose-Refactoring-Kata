@@ -109,12 +109,12 @@ class GildedRoseTest {
     }
 
     @Test
-    @DisplayName("When the Brie has a quality of 50 It should not increase in Quality")
-    void agedBrieWithQualityOf50() {
+    @DisplayName("Aged Brie can't have a quality over 50")
+    void agedBrieQualityCantGoOverOver50() {
         // Given
         final var itemName = AGED_BRIE;
         final var unexpiredAgedBrie = new Item(itemName, 5, 50);
-        final var expiredAgedBrie = new Item(itemName, 0, 50);
+        final var expiredAgedBrie = new Item(itemName, 0, 49);
         final var items = new Item[]{unexpiredAgedBrie, expiredAgedBrie};
         final var app = new GildedRose(items);
 

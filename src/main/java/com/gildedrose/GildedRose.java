@@ -81,22 +81,38 @@ class GildedRose {
             case SULFURAS_HAND_OF_RAGNAROS:
                 break;
             case BACKSTAGE:
-                processItem(item);
+                processBackStage(item);
                 break;
             default:
                 processOrdinaryItem(item);
         }
     }
 
+    private void processBackStage(Item item) {
+        var appreciationFactor = 1;
+        if (item.sellIn <= 5) {
+            appreciationFactor = 3;
+        } else if (item.sellIn <= 10) {
+            appreciationFactor = 2;
+        }
+
+        item.quality = item.sellIn > 0 ? appreciate(item.quality, appreciationFactor) : 0;
+        item.sellIn--;
+    }
+
     private void processOrdinaryItem(Item item) {
-        var decreaseFactor = item.sellIn > 0 ? 1 : 2;
-        item.quality = item.quality > QUALITY_MIN ? item.quality - decreaseFactor : item.quality;
+        var depreciation = item.sellIn > 0 ? 1 : 2;
+        item.quality = item.quality > QUALITY_MIN ? item.quality - depreciation : item.quality;
         item.sellIn--;
     }
 
     private void processBrie(Item item) {
-        var increaseFactor = item.sellIn > 0 ? 1 : 2;
-        item.quality = item.quality < QUALITY_MAX ? item.quality + increaseFactor : item.quality;
+        var appreciation = item.sellIn > 0 ? 1 : 2;
+        item.quality = appreciate(item.quality, appreciation);
         item.sellIn--;
+    }
+
+    private int appreciate(int quality, int appreciationFactor) {
+        return quality + appreciationFactor >= QUALITY_MAX ? QUALITY_MAX : quality + appreciationFactor;
     }
 }
