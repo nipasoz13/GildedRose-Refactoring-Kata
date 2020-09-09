@@ -314,4 +314,62 @@ class GildedRoseTest {
         assertEquals(expectedQuality, app.items[2].quality);
     }
 
+    @Test
+    @DisplayName("Conjured items should decrease twice as fast as ordinary items")
+    public void conjuredItems() {
+        // Given
+        final var itemName = "Conjured";
+
+        final var unexpiredConjuredItem = new Item(itemName, 12, 23);
+        final var expiredConjuredItem = new Item(itemName, 0, 16);
+
+        final var items = new Item[]{unexpiredConjuredItem, expiredConjuredItem};
+        final var app = new GildedRose(items);
+
+        final var unexpiredExpectedQuality = 21;
+        final var unexpiredExpectedSellin = 11;
+        final var expiredExpectedQuality = 12;
+        final var expiredExpectedSellin = -1;
+
+        // When
+        app.updateQuality();
+
+        // Then
+        assertEquals(itemName, app.items[0].name);
+        assertEquals(unexpiredExpectedQuality, app.items[0].quality);
+        assertEquals(unexpiredExpectedSellin, app.items[0].sellIn);
+
+        assertEquals(itemName, app.items[1].name);
+        assertEquals(expiredExpectedQuality, app.items[1].quality);
+        assertEquals(expiredExpectedSellin, app.items[1].sellIn);
+    }
+
+    @Test
+    @DisplayName("Conjured items can't decrease bellow zero")
+    public void conjuredItemsCantDecreaseBellowZero() {
+        // Given
+        final var itemName = "Conjured";
+
+        final var unexpiredConjuredItem = new Item(itemName, 12, 1);
+        final var expiredConjuredItem = new Item(itemName, 0, 3);
+
+        final var items = new Item[]{unexpiredConjuredItem, expiredConjuredItem};
+        final var app = new GildedRose(items);
+
+        final var expectedQuality = 0;
+        final var unexpiredExpectedSellin = 11;
+        final var expiredExpectedSellin = -1;
+
+        // When
+        app.updateQuality();
+
+        // Then
+        assertEquals(itemName, app.items[0].name);
+        assertEquals(expectedQuality, app.items[0].quality);
+        assertEquals(unexpiredExpectedSellin, app.items[0].sellIn);
+
+        assertEquals(itemName, app.items[1].name);
+        assertEquals(expectedQuality, app.items[1].quality);
+        assertEquals(expiredExpectedSellin, app.items[1].sellIn);
+    }
 }

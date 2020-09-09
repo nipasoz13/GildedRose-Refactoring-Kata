@@ -35,6 +35,8 @@ class GildedRose {
                 return computeBrieQuality(item);
             case BACKSTAGE:
                 return computeBackstageItemQuality(item);
+            case CONJURED:
+                return computeConjuredItemQuality(item);
             default:
                 return computeOrdinaryItemQuality(item);
         }
@@ -59,6 +61,11 @@ class GildedRose {
     private int computeBrieQuality(Item item) {
         var appreciation = item.sellIn > 0 ? 1 : 2;
         return appreciate(item.quality, appreciation);
+    }
+
+    private int computeConjuredItemQuality(Item item) {
+        var depreciation = item.sellIn > 0 ? 2 : 4;
+        return item.quality - depreciation <= QUALITY_MIN ? QUALITY_MIN : item.quality - depreciation;
     }
 
     private int appreciate(int quality, int appreciationFactor) {
