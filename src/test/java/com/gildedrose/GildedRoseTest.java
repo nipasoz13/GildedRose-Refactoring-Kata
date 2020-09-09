@@ -54,13 +54,13 @@ class GildedRoseTest {
     }
 
     @Test
-    @DisplayName("When the Item has zero value It should Keep Quality at Zero")
+    @DisplayName("An item can't have value bellow 0")
     void zeroQualityItem() {
         // Given
         final var dexterityVestName = DEXTERITY_VEST_NAME;
         final var dexterityItem = new Item(dexterityVestName, 5, 0);
         final var elixirName = "Elixir of the Mongoose";
-        final var elixirItem = new Item(elixirName, 0, 0);
+        final var elixirItem = new Item(elixirName, 0, 1);
 
 
         final var items = new Item[]{dexterityItem, elixirItem};

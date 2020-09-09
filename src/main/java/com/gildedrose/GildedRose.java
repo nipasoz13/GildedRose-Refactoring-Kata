@@ -102,7 +102,7 @@ class GildedRose {
 
     private void processOrdinaryItem(Item item) {
         var depreciation = item.sellIn > 0 ? 1 : 2;
-        item.quality = item.quality > QUALITY_MIN ? item.quality - depreciation : item.quality;
+        item.quality = item.quality - depreciation <= QUALITY_MIN ? QUALITY_MIN : item.quality - depreciation;
         item.sellIn--;
     }
 
