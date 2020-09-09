@@ -2,12 +2,10 @@ package com.gildedrose;
 
 import java.util.Arrays;
 
+import static com.gildedrose.ItemCategory.SULFURAS_HAND_OF_RAGNAROS;
 import static com.gildedrose.ItemCategory.getCategory;
 
 class GildedRose {
-    private static final String AGED_BRIE = "Aged Brie";
-    private static final String BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert";
-    private static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
     private static final int QUALITY_MAX = 50;
     private static final int QUALITY_MIN = 0;
 
@@ -19,76 +17,30 @@ class GildedRose {
 
     public void updateQuality() {
         Arrays.stream(items)
-                .forEach((item) -> newProcessItem(item));
+                .forEach((item) -> processItem(item));
     }
 
     private void processItem(Item item) {
-        if (!item.name.equals(AGED_BRIE)
-                && !item.name.equals(BACKSTAGE)) {
-            if (item.quality > 0) {
-                if (!item.name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
-                    item.quality = item.quality - 1;
-                }
-            }
-        } else {
-            if (item.quality < QUALITY_MAX) {
-                item.quality = item.quality + 1;
-
-                if (item.name.equals(BACKSTAGE)) {
-                    if (item.sellIn < 11) {
-                        if (item.quality < QUALITY_MAX) {
-                            item.quality = item.quality + 1;
-                        }
-                    }
-
-                    if (item.sellIn < 6) {
-                        if (item.quality < QUALITY_MAX) {
-                            item.quality = item.quality + 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!item.name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
-            item.sellIn = item.sellIn - 1;
-        }
-
-        if (item.sellIn < 0) {
-            if (!item.name.equals(AGED_BRIE)) {
-                if (!item.name.equals(BACKSTAGE)) {
-                    if (item.quality > 0) {
-                        if (!item.name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
-                            item.quality = item.quality - 1;
-                        }
-                    }
-                } else {
-                    item.quality = item.quality - item.quality;
-                }
-            } else {
-                if (item.quality < QUALITY_MAX) {
-                    item.quality = item.quality + 1;
-                }
-            }
+        item.quality = computeItemQuality(item);
+        if (getCategory(item) != SULFURAS_HAND_OF_RAGNAROS) {
+            item.sellIn--;
         }
     }
 
-    private void newProcessItem(Item item) {
+    private int computeItemQuality(Item item) {
         switch (getCategory(item)) {
-            case AGED_BRIE:
-                processBrie(item);
-                break;
             case SULFURAS_HAND_OF_RAGNAROS:
-                break;
+                return item.quality;
+            case AGED_BRIE:
+                return computeBrieQuality(item);
             case BACKSTAGE:
-                processBackStage(item);
-                break;
+                return computeBackstageItemQuality(item);
             default:
-                processOrdinaryItem(item);
+                return computeOrdinaryItemQuality(item);
         }
     }
 
-    private void processBackStage(Item item) {
+    private int computeBackstageItemQuality(Item item) {
         var appreciationFactor = 1;
         if (item.sellIn <= 5) {
             appreciationFactor = 3;
@@ -96,20 +48,17 @@ class GildedRose {
             appreciationFactor = 2;
         }
 
-        item.quality = item.sellIn > 0 ? appreciate(item.quality, appreciationFactor) : 0;
-        item.sellIn--;
+        return item.sellIn > 0 ? appreciate(item.quality, appreciationFactor) : 0;
     }
 
-    private void processOrdinaryItem(Item item) {
+    private int computeOrdinaryItemQuality(Item item) {
         var depreciation = item.sellIn > 0 ? 1 : 2;
-        item.quality = item.quality - depreciation <= QUALITY_MIN ? QUALITY_MIN : item.quality - depreciation;
-        item.sellIn--;
+        return item.quality - depreciation <= QUALITY_MIN ? QUALITY_MIN : item.quality - depreciation;
     }
 
-    private void processBrie(Item item) {
+    private int computeBrieQuality(Item item) {
         var appreciation = item.sellIn > 0 ? 1 : 2;
-        item.quality = appreciate(item.quality, appreciation);
-        item.sellIn--;
+        return appreciate(item.quality, appreciation);
     }
 
     private int appreciate(int quality, int appreciationFactor) {
