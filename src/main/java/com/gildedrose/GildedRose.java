@@ -78,8 +78,9 @@ class GildedRose {
             case AGED_BRIE:
                 processBrie(item);
                 break;
-            case BACKSTAGE:
             case SULFURAS_HAND_OF_RAGNAROS:
+                break;
+            case BACKSTAGE:
                 processItem(item);
                 break;
             default:
