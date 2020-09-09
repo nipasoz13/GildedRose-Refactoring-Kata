@@ -2,7 +2,14 @@ package com.gildedrose;
 
 import java.util.Arrays;
 
+import static com.gildedrose.ItemCategory.getCategory;
+
 class GildedRose {
+    public static final String AGED_BRIE = "Aged Brie";
+    public static final String BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert";
+    private static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
+    private static final int QUALITY_MAX = 50;
+
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -11,30 +18,30 @@ class GildedRose {
 
     public void updateQuality() {
         Arrays.stream(items)
-                .forEach((item) -> processItem(item));
+                .forEach((item) -> newProcessItem(item));
     }
 
     private void processItem(Item item) {
-        if (!item.name.equals("Aged Brie")
-                && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+        if (!item.name.equals(AGED_BRIE)
+                && !item.name.equals(BACKSTAGE)) {
             if (item.quality > 0) {
-                if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+                if (!item.name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
                     item.quality = item.quality - 1;
                 }
             }
         } else {
-            if (item.quality < 50) {
+            if (item.quality < QUALITY_MAX) {
                 item.quality = item.quality + 1;
 
-                if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                if (item.name.equals(BACKSTAGE)) {
                     if (item.sellIn < 11) {
-                        if (item.quality < 50) {
+                        if (item.quality < QUALITY_MAX) {
                             item.quality = item.quality + 1;
                         }
                     }
 
                     if (item.sellIn < 6) {
-                        if (item.quality < 50) {
+                        if (item.quality < QUALITY_MAX) {
                             item.quality = item.quality + 1;
                         }
                     }
@@ -42,15 +49,15 @@ class GildedRose {
             }
         }
 
-        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+        if (!item.name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
             item.sellIn = item.sellIn - 1;
         }
 
         if (item.sellIn < 0) {
-            if (!item.name.equals("Aged Brie")) {
-                if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+            if (!item.name.equals(AGED_BRIE)) {
+                if (!item.name.equals(BACKSTAGE)) {
                     if (item.quality > 0) {
-                        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+                        if (!item.name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
                             item.quality = item.quality - 1;
                         }
                     }
@@ -58,10 +65,26 @@ class GildedRose {
                     item.quality = item.quality - item.quality;
                 }
             } else {
-                if (item.quality < 50) {
+                if (item.quality < QUALITY_MAX) {
                     item.quality = item.quality + 1;
                 }
             }
         }
+    }
+
+    private void newProcessItem(Item item) {
+        switch (getCategory(item)) {
+            case AGED_BRIE: processBrie(item);
+                break;
+            default:
+                processItem(item);
+        }
+
+    }
+
+    private void processBrie(Item item) {
+        var increaseFactor = item.sellIn > 0 ? 1 : 2;
+        item.quality = item.quality < QUALITY_MAX ? item.quality + increaseFactor : item.quality;
+        item.sellIn--;
     }
 }

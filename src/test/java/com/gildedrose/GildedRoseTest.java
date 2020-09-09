@@ -90,7 +90,10 @@ class GildedRoseTest {
         final var app = new GildedRose(items);
 
         final var expectedUnexpiredBrieQuality = 11;
+        final var expectedUnexpiredBrieSellIn = 4;
+
         final var expectedExpiredBrieQuality = 12;
+        final var expectedExpiredBrieSellin = -1;
 
         // When
         app.updateQuality();
@@ -98,9 +101,11 @@ class GildedRoseTest {
         // Then
         assertEquals(itemName, app.items[0].name);
         assertEquals(expectedUnexpiredBrieQuality, app.items[0].quality);
+        assertEquals(expectedUnexpiredBrieSellIn, app.items[0].sellIn);
 
         assertEquals(itemName, app.items[1].name);
         assertEquals(expectedExpiredBrieQuality, app.items[1].quality);
+        assertEquals(expectedExpiredBrieSellin, app.items[1].sellIn);
     }
 
     @Test
@@ -114,7 +119,10 @@ class GildedRoseTest {
         final var app = new GildedRose(items);
 
         final var expectedUnexpiredBrieQuality = 50;
+        final var expectedUnexpiredBrieSellIn = 4;
+
         final var expectedExpiredBrieQuality = 50;
+        final var expectedExpiredBrieSellIn = -1;
 
         // When
         app.updateQuality();
@@ -122,9 +130,11 @@ class GildedRoseTest {
         // Then
         assertEquals(itemName, app.items[0].name);
         assertEquals(expectedUnexpiredBrieQuality, app.items[0].quality);
+        assertEquals(expectedUnexpiredBrieSellIn, app.items[0].sellIn);
 
         assertEquals(itemName, app.items[1].name);
         assertEquals(expectedExpiredBrieQuality, app.items[1].quality);
+        assertEquals(expectedExpiredBrieSellIn, app.items[1].sellIn);
     }
 
     @Test
@@ -303,4 +313,5 @@ class GildedRoseTest {
         assertEquals(backStageName, app.items[2].name);
         assertEquals(expectedQuality, app.items[2].quality);
     }
+
 }
